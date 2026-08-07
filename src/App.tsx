@@ -1,8 +1,33 @@
-import Header from "./components/Header";
-import rdsLogo from "./assets/logos/rds-logo-white.png";
 import "./App.css";
+import aquaintMark from "./assets/logos/aquaint-mark.png";
+import rdsLogo from "./assets/logos/rds-logo-white.png";
+import rdsMark from "./assets/logos/rds-mark.png";
+import srcsMark from "./assets/logos/srcs-mark.png";
+import Header from "./components/Header";
+
+import { useEffect, useState } from "react";
 
 function App() {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > window.innerHeight * 0.85);
+    };
+
+    handleScroll(); // Check on mount
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       <Header />
@@ -65,157 +90,426 @@ function App() {
               </p>
 
               <p className="statement-copy">
-                We don't begin with a product to sell. We begin by understanding
-                the problem, the people affected by it, and what a useful
-                outcome actually looks like.
+                We don&apos;t begin with a product to sell. We begin by
+                understanding the problem, the people affected by it, and what a
+                useful outcome actually looks like.
               </p>
             </div>
           </div>
         </section>
 
         <section className="network" id="network">
-          <div className="section-heading">
+          <div className="section-heading network-heading">
             <p className="eyebrow">THE RDS NETWORK</p>
+
             <h2>
-              Different organizations. Shared relationships. Shared purpose.
+              Different organizations.
+              <br />
+              Shared purpose.
             </h2>
+
+            <p className="section-intro">
+              Raney Day Solutions builds and supports organizations around
+              specific problems, industries, and opportunities. Each brings its
+              own expertise while sharing relationships, systems, and a
+              commitment to excellent work.
+            </p>
           </div>
 
           <div className="company-grid">
-            <article className="company-card">
-              <span className="relationship">Core</span>
-              <h3>Raney Day Solutions</h3>
-              <p>
-                The shared systems, technology, and problem-solving engine
-                behind the network.
-              </p>
+            <article className="company-card company-card-rds">
+              <div className="company-card-top">
+                <span className="relationship">Core</span>
+                <img
+                  className="company-mark company-mark-rds"
+                  src={rdsMark}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </div>
+
+              <div>
+                <h3>Raney Day Solutions</h3>
+                <p>
+                  The systems, technology, operations, and problem-solving
+                  engine at the center of the network.
+                </p>
+              </div>
+
+              <a href="#" className="company-link">
+                About RDS <span aria-hidden="true">→</span>
+              </a>
             </article>
 
-            <article className="company-card">
-              <span className="relationship">An RDS Company</span>
-              <h3>Aqua Intelligence</h3>
-              <p>
-                Water intelligence that turns monitoring and field data into
-                practical decisions.
-              </p>
+            <article className="company-card company-card-aquaint">
+              <div className="company-card-top">
+                <span className="relationship">An RDS Company</span>
+                <img
+                  className="company-mark company-mark-aquaint"
+                  src={aquaintMark}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </div>
+
+              <div>
+                <h3>Aqua Intelligence</h3>
+                <p>
+                  Water intelligence that turns field monitoring and complex
+                  data into practical decisions.
+                </p>
+              </div>
+
+              <a
+                href="https://aquaint.io"
+                className="company-link"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit AquaINT <span aria-hidden="true">↗</span>
+              </a>
             </article>
 
-            <article className="company-card">
-              <span className="relationship">Sister Company</span>
-              <h3>Soil-Right Consulting Services</h3>
-              <p>
-                Independent agronomic consulting and agricultural intelligence
-                built around better decisions from the ground up.
-              </p>
+            <article className="company-card company-card-properties">
+              <div className="company-card-top">
+                <span className="relationship">RDS Business</span>
+                <span
+                  className="company-node company-node-properties"
+                  aria-hidden="true"
+                />
+              </div>
+
+              <div>
+                <h3>Raney Day Properties</h3>
+                <p>
+                  Real estate solutions built around creative problem-solving,
+                  responsible stewardship, and opportunities that work for
+                  everyone involved.
+                </p>
+              </div>
+
+              <span className="company-link company-link-muted">
+                Coming soon
+              </span>
+            </article>
+
+            <article className="company-card company-card-srcs">
+              <div className="company-card-top">
+                <span className="relationship">Sister Company</span>
+                <img
+                  className="company-mark company-mark-srcs"
+                  src={srcsMark}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </div>
+
+              <div>
+                <h3>Soil-Right Consulting Services</h3>
+                <p>
+                  Independent agronomic consulting and agricultural intelligence
+                  built around better decisions from the ground up.
+                </p>
+              </div>
+
+              <a
+                href="https://soilright.com"
+                className="company-link"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit Soil-Right <span aria-hidden="true">↗</span>
+              </a>
             </article>
           </div>
         </section>
 
         <section className="process" id="process">
-          <div className="section-heading">
+          <div className="section-heading process-heading">
             <p className="eyebrow">HOW WE WORK</p>
-            <h2>Understand. Connect. Build. Steward.</h2>
+
+            <h2>
+              Understand.
+              <br />
+              Connect.
+              <br />
+              Build.
+              <br />
+              Steward.
+            </h2>
+
+            <p className="section-intro">
+              Good solutions rarely begin with the answer. They begin with
+              getting close enough to the problem to understand what is actually
+              happening.
+            </p>
           </div>
+
+          <div className="process-line" aria-hidden="true" />
 
           <div className="process-grid">
             <article>
-              <span>01</span>
+              <span className="process-number">01</span>
+              <div className="process-node" aria-hidden="true" />
               <h3>Understand</h3>
-              <p>Get close enough to the problem to understand what is real.</p>
+              <p>
+                Learn the problem, the people, the constraints, and the outcome
+                that actually matters.
+              </p>
             </article>
 
             <article>
-              <span>02</span>
+              <span className="process-number">02</span>
+              <div className="process-node" aria-hidden="true" />
               <h3>Connect</h3>
               <p>
-                Bring together the right people, information, technology, and
-                experience.
+                Bring together the right people, information, systems,
+                technology, and experience.
               </p>
             </article>
 
             <article>
-              <span>03</span>
+              <span className="process-number">03</span>
+              <div className="process-node" aria-hidden="true" />
               <h3>Build</h3>
               <p>
-                Create the simplest useful solution that solves the real
-                problem.
+                Create the simplest useful solution that addresses the real
+                problem instead of adding noise.
               </p>
             </article>
 
             <article>
-              <span>04</span>
+              <span className="process-number">04</span>
+              <div className="process-node" aria-hidden="true" />
               <h3>Steward</h3>
-              <p>Improve, maintain, and multiply what works.</p>
+              <p>
+                Improve what works, care for what has been entrusted to us, and
+                multiply the value created.
+              </p>
             </article>
           </div>
         </section>
 
         <section className="capabilities">
-          <div className="section-heading">
+          <div className="section-heading capability-heading">
             <p className="eyebrow">WHAT WE DO</p>
-            <h2>Build. Operate. Advise.</h2>
+
+            <h2>
+              Build.
+              <br />
+              Operate.
+              <br />
+              Advise.
+            </h2>
+
+            <p className="section-intro">
+              The form of the solution changes with the problem. Sometimes that
+              means building something new. Sometimes it means making an
+              existing system work better. Sometimes it means helping people see
+              the path forward.
+            </p>
           </div>
 
           <div className="capability-grid">
-            <article>
+            <article className="capability-item">
+              <div className="capability-top">
+                <span className="capability-number">01</span>
+                <span className="capability-symbol">+</span>
+              </div>
+
               <h3>Build</h3>
-              <p>
-                Software, tools, workflows, products, and companies built around
-                real problems.
+
+              <p className="capability-summary">
+                Create what the problem actually needs.
+              </p>
+
+              <p className="capability-copy">
+                Software, internal tools, workflows, products, operating
+                systems, and companies built around real-world problems.
               </p>
             </article>
 
-            <article>
+            <article className="capability-item">
+              <div className="capability-top">
+                <span className="capability-number">02</span>
+                <span className="capability-symbol">↻</span>
+              </div>
+
               <h3>Operate</h3>
-              <p>
-                Systems, shared services, data, and process that make
-                organizations work better.
+
+              <p className="capability-summary">
+                Make good ideas work in the real world.
+              </p>
+
+              <p className="capability-copy">
+                Shared services, technology, data, processes, and operational
+                support that help organizations execute consistently.
               </p>
             </article>
 
-            <article>
+            <article className="capability-item">
+              <div className="capability-top">
+                <span className="capability-number">03</span>
+                <span className="capability-symbol">→</span>
+              </div>
+
               <h3>Advise</h3>
-              <p>
-                Strategy and problem-solving where technology, operations,
-                business, and people intersect.
+
+              <p className="capability-summary">
+                Help people see the problem more clearly.
+              </p>
+
+              <p className="capability-copy">
+                Strategy and practical problem-solving where business,
+                technology, operations, data, and people intersect.
               </p>
             </article>
           </div>
         </section>
 
         <section className="purpose" id="purpose">
-          <p className="eyebrow">WHY WE WORK</p>
-          <h2>Our work is not the point. Faithfulness is.</h2>
-          <p>
-            Raney Day Solutions exists to honor God through the way we work, the
-            way we treat people, and the way we steward the opportunities
-            entrusted to us.
-          </p>
+          <div className="purpose-inner">
+            <p className="eyebrow">WHY WE WORK</p>
+
+            <h2>
+              Our work is not the point.
+              <br />
+              Faithfulness is.
+            </h2>
+
+            <div className="purpose-content">
+              <p className="purpose-lead">
+                Raney Day Solutions exists to honor God through the way we work,
+                the way we treat people, and the way we steward the
+                opportunities entrusted to us.
+              </p>
+
+              <div className="purpose-principles">
+                <article>
+                  <span>01</span>
+                  <h3>Excellent work</h3>
+                  <p>
+                    We believe doing things well is part of the witness. Care,
+                    precision, and follow-through matter.
+                  </p>
+                </article>
+
+                <article>
+                  <span>02</span>
+                  <h3>Honest relationships</h3>
+                  <p>
+                    People are more important than transactions. We want trust
+                    to outlast the work itself.
+                  </p>
+                </article>
+
+                <article>
+                  <span>03</span>
+                  <h3>Responsible stewardship</h3>
+                  <p>
+                    Time, money, people, opportunities, and influence are things
+                    to be handled carefully, not merely consumed.
+                  </p>
+                </article>
+              </div>
+
+              <p className="purpose-close">
+                Whatever we build, we want the fruit of it to matter beyond
+                ourselves.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className="contact" id="contact">
-          <h2>Have a problem worth solving?</h2>
-          <p>
-            We like complicated problems, especially the ones that do not fit
-            neatly inside someone else's service offering.
-          </p>
+          <div className="contact-inner">
+            <p className="contact-eyebrow">START A CONVERSATION</p>
 
-          <div className="hero-actions">
-            <a
-              className="button button-primary"
-              href="mailto:boone@raneydaysolutions.com"
-            >
-              Start a Conversation
-            </a>
+            <h2>Have a problem worth solving?</h2>
 
-            <a
-              className="button button-secondary"
-              href="https://utilities.raneydaysolutions.com"
-            >
-              RDS Utilities
-            </a>
+            <div className="contact-bottom">
+              <p>
+                We like complicated problems, especially the ones that
+                don&apos;t fit neatly inside someone else&apos;s service
+                offering.
+              </p>
+
+              <a
+                className="button contact-button"
+                href="mailto:boone@raneydaysolutions.com"
+              >
+                Start a Conversation <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
         </section>
+
+        <footer className="site-footer">
+          <div className="footer-inner">
+            <div className="footer-brand">
+              <p className="footer-name">Raney Day Solutions</p>
+              <p className="footer-tagline">
+                Solve well. Steward faithfully. Glorify God.
+              </p>
+            </div>
+
+            <div className="footer-columns">
+              <div className="footer-column">
+                <p className="footer-heading">Network</p>
+
+                <a href="https://aquaint.io" target="_blank" rel="noreferrer">
+                  Aqua Intelligence ↗
+                </a>
+
+                <span>Raney Day Properties</span>
+
+                <a
+                  href="https://soilright.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Soil-Right ↗
+                </a>
+              </div>
+
+              <div className="footer-column">
+                <p className="footer-heading">RDS</p>
+
+                <a href="#network">Network</a>
+                <a href="#process">How We Work</a>
+                <a href="#purpose">Purpose</a>
+                <a href="#contact">Contact</a>
+              </div>
+
+              <div className="footer-column">
+                <p className="footer-heading">Internal</p>
+
+                <a
+                  href="https://utilities.raneydaysolutions.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  RDS Utilities ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Raney Day Solutions, Inc.</span>
+
+            <span>Built to solve real problems.</span>
+          </div>
+        </footer>
+
+        <button
+          className={`back-to-top ${showBackToTop ? "is-visible" : ""}`}
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+        >
+          ↑
+        </button>
       </main>
     </>
   );
