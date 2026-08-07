@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import "./App.css";
 import aquaintMark from "./assets/logos/aquaint-mark.png";
 import rdsLogo from "./assets/logos/rds-logo-white.png";
@@ -5,19 +7,19 @@ import rdsMark from "./assets/logos/rds-mark.png";
 import srcsMark from "./assets/logos/srcs-mark.png";
 import Header from "./components/Header";
 
-import { useEffect, useState } from "react";
+type ContactStatus = "idle" | "sending" | "success" | "error";
 
 function App() {
   const [showContactModal, setShowContactModal] = useState(false);
-
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [contactStatus, setContactStatus] = useState<ContactStatus>("idle");
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > window.innerHeight * 0.85);
     };
 
-    handleScroll(); // Check on mount
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -25,10 +27,6 @@ function App() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   useEffect(() => {
     if (!showContactModal) {
@@ -38,6 +36,7 @@ function App() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setShowContactModal(false);
+        setContactStatus("idle");
       }
     };
 
@@ -50,9 +49,70 @@ function App() {
     };
   }, [showContactModal]);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const openContactModal = () => {
+    setContactStatus("idle");
+    setShowContactModal(true);
+  };
+
+  const closeContactModal = () => {
+    setShowContactModal(false);
+    setContactStatus("idle");
+  };
+
+  const handleContactSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+
+    setContactStatus("sending");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const name = String(formData.get("name") ?? "");
+    const email = String(formData.get("email") ?? "");
+    const company = String(formData.get("company") ?? "");
+    const problem = String(formData.get("problem") ?? "");
+
+    const googleFormData = new URLSearchParams();
+
+    googleFormData.append("entry.17784801", name);
+    googleFormData.append("entry.1611186763", email);
+    googleFormData.append("entry.1703118455", company);
+    googleFormData.append("entry.1473902308", problem);
+
+    try {
+      await fetch(
+        "https://docs.google.com/forms/d/e/1FAIpQLSfnDE-NFqPQPA0LnXVHyut6WRxGzecNaLv3V-RY2DWAQwfLgQ/formResponse",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: googleFormData.toString(),
+        },
+      );
+
+      form.reset();
+      setContactStatus("success");
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      setContactStatus("error");
+    }
+  };
+
   return (
     <>
       <Header />
+
       <main>
         <section className="hero">
           <div className="hero-content">
@@ -61,7 +121,7 @@ function App() {
             <h1>We solve problems.</h1>
 
             <p className="hero-lead">
-              By brining together the right people, information, systems, and
+              By bringing together the right people, information, systems, and
               technology.
             </p>
 
@@ -143,6 +203,7 @@ function App() {
             <article className="company-card company-card-rds">
               <div className="company-card-top">
                 <span className="relationship">Core</span>
+
                 <img
                   className="company-mark company-mark-rds"
                   src={rdsMark}
@@ -153,6 +214,7 @@ function App() {
 
               <div>
                 <h3>Raney Day Solutions</h3>
+
                 <p>
                   The systems, technology, operations, and problem-solving
                   engine that connects the network.
@@ -167,6 +229,7 @@ function App() {
             <article className="company-card company-card-aquaint">
               <div className="company-card-top">
                 <span className="relationship">An RDS Company</span>
+
                 <img
                   className="company-mark company-mark-aquaint"
                   src={aquaintMark}
@@ -177,6 +240,7 @@ function App() {
 
               <div>
                 <h3>Aqua Intelligence</h3>
+
                 <p>
                   Water intelligence that turns field monitoring and complex
                   data into practical decisions.
@@ -196,6 +260,7 @@ function App() {
             <article className="company-card company-card-properties">
               <div className="company-card-top">
                 <span className="relationship">RDS Business</span>
+
                 <span
                   className="company-node company-node-properties"
                   aria-hidden="true"
@@ -204,6 +269,7 @@ function App() {
 
               <div>
                 <h3>Raney Day Properties</h3>
+
                 <p>
                   Real estate solutions built around creative financing,
                   responsible stewardship, and helping people move confidently
@@ -219,6 +285,7 @@ function App() {
             <article className="company-card company-card-srcs">
               <div className="company-card-top">
                 <span className="relationship">Sister Company</span>
+
                 <img
                   className="company-mark company-mark-srcs"
                   src={srcsMark}
@@ -229,6 +296,7 @@ function App() {
 
               <div>
                 <h3>Soil-Right Consulting Services</h3>
+
                 <p>
                   Independent agronomic consulting and agricultural intelligence
                   built around better decisions from the ground up.
@@ -274,7 +342,9 @@ function App() {
             <article>
               <span className="process-number">01</span>
               <div className="process-node" aria-hidden="true" />
+
               <h3>Understand</h3>
+
               <p>
                 Learn the problem, the people, the constraints, and the outcome
                 that actually matters.
@@ -284,7 +354,9 @@ function App() {
             <article>
               <span className="process-number">02</span>
               <div className="process-node" aria-hidden="true" />
+
               <h3>Connect</h3>
+
               <p>
                 Bring together the right people, information, systems,
                 technology, and experience.
@@ -294,7 +366,9 @@ function App() {
             <article>
               <span className="process-number">03</span>
               <div className="process-node" aria-hidden="true" />
+
               <h3>Build</h3>
+
               <p>
                 Create the simplest useful solution that solves the real problem
                 without adding unnecessary complexity.
@@ -304,7 +378,9 @@ function App() {
             <article>
               <span className="process-number">04</span>
               <div className="process-node" aria-hidden="true" />
+
               <h3>Steward</h3>
+
               <p>
                 Improve what works, care for what has been entrusted to us, and
                 multiply the value created.
@@ -410,6 +486,7 @@ function App() {
                 <article>
                   <span>01</span>
                   <h3>Excellent work</h3>
+
                   <p>
                     We believe doing things well is part of the witness. Care,
                     precision, and follow-through matter.
@@ -419,6 +496,7 @@ function App() {
                 <article>
                   <span>02</span>
                   <h3>Honest relationships</h3>
+
                   <p>
                     People are more important than transactions. We want trust
                     to outlast the work itself.
@@ -428,6 +506,7 @@ function App() {
                 <article>
                   <span>03</span>
                   <h3>Responsible stewardship</h3>
+
                   <p>
                     Time, money, people, opportunities, and influence are things
                     to be handled carefully, not merely used.
@@ -459,7 +538,7 @@ function App() {
               <button
                 className="button contact-button"
                 type="button"
-                onClick={() => setShowContactModal(true)}
+                onClick={openContactModal}
               >
                 Start a Conversation <span aria-hidden="true">→</span>
               </button>
@@ -471,6 +550,7 @@ function App() {
           <div className="footer-inner">
             <div className="footer-brand">
               <p className="footer-name">Raney Day Solutions</p>
+
               <p className="footer-tagline">
                 Solve well. Steward faithfully. Glorify God.
               </p>
@@ -531,7 +611,7 @@ function App() {
             role="presentation"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
-                setShowContactModal(false);
+                closeContactModal();
               }
             }}
           >
@@ -544,87 +624,133 @@ function App() {
               <button
                 className="contact-modal-close"
                 type="button"
-                onClick={() => setShowContactModal(false)}
+                onClick={closeContactModal}
                 aria-label="Close contact form"
               >
                 ×
               </button>
 
-              <p className="contact-modal-eyebrow">START A CONVERSATION</p>
+              {contactStatus === "success" ? (
+                <div className="contact-success">
+                  <p className="contact-modal-eyebrow">MESSAGE RECEIVED</p>
 
-              <h2 id="contact-modal-title">
-                What problem are you trying to solve?
-              </h2>
+                  <h2 id="contact-modal-title">Thanks for reaching out.</h2>
 
-              <p className="contact-modal-intro">
-                Tell us a little about what you&apos;re working through.
-                We&apos;ll take it from there.
-              </p>
+                  <p>
+                    We&apos;ll review what you sent and get back to you soon.
+                  </p>
 
-              <form
-                className="contact-modal-form"
-                onSubmit={(event) => event.preventDefault()}
-              >
-                <div className="contact-modal-row">
-                  <label>
-                    <span>Name</span>
-                    <input
-                      type="text"
-                      name="name"
-                      autoComplete="name"
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    <span>Email</span>
-                    <input
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      required
-                    />
-                  </label>
-                </div>
-
-                <label>
-                  <span>Company / Organization</span>
-                  <input
-                    type="text"
-                    name="company"
-                    autoComplete="organization"
-                  />
-                </label>
-
-                <label>
-                  <span>Tell us about the problem</span>
-                  <textarea name="problem" rows={5} required />
-                </label>
-
-                <button className="button contact-modal-submit" type="submit">
-                  Send Message <span aria-hidden="true">→</span>
-                </button>
-              </form>
-
-              <div className="contact-modal-options">
-                <div>
-                  <p>Prefer email?</p>
-                  <a href="mailto:boone@raneydaysolutions.com">
-                    Email us <span aria-hidden="true">→</span>
-                  </a>
-                </div>
-
-                <div>
-                  <p>Ready to talk?</p>
-                  <a
-                    href="https://calendly.com/YOUR-CALENDLY-LINK"
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    className="button contact-modal-submit"
+                    type="button"
+                    onClick={closeContactModal}
                   >
-                    Schedule a conversation <span aria-hidden="true">↗</span>
-                  </a>
+                    Close
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <p className="contact-modal-eyebrow">START A CONVERSATION</p>
+
+                  <h2 id="contact-modal-title">
+                    What problem are you trying to solve?
+                  </h2>
+
+                  <p className="contact-modal-intro">
+                    Tell us a little about what you&apos;re working through.
+                    We&apos;ll take it from there.
+                  </p>
+
+                  <form
+                    className="contact-modal-form"
+                    onSubmit={handleContactSubmit}
+                  >
+                    <div className="contact-modal-row">
+                      <label>
+                        <span>Name</span>
+
+                        <input
+                          type="text"
+                          name="name"
+                          autoComplete="name"
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        <span>Email</span>
+
+                        <input
+                          type="email"
+                          name="email"
+                          autoComplete="email"
+                          required
+                        />
+                      </label>
+                    </div>
+
+                    <label>
+                      <span>Company / Organization</span>
+
+                      <input
+                        type="text"
+                        name="company"
+                        autoComplete="organization"
+                      />
+                    </label>
+
+                    <label>
+                      <span>Tell us about the problem</span>
+
+                      <textarea name="problem" rows={5} required />
+                    </label>
+
+                    {contactStatus === "error" && (
+                      <p className="contact-form-error">
+                        Something went wrong while sending your message. Please
+                        try again or email us directly.
+                      </p>
+                    )}
+
+                    <button
+                      className="button contact-modal-submit"
+                      type="submit"
+                      disabled={contactStatus === "sending"}
+                    >
+                      {contactStatus === "sending" ? (
+                        "Sending..."
+                      ) : (
+                        <>
+                          Send Message <span aria-hidden="true">→</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="contact-modal-options">
+                    <div>
+                      <p>Prefer email?</p>
+
+                      <a href="mailto:boone@raneydaysolutions.com">
+                        Email us <span aria-hidden="true">→</span>
+                      </a>
+                    </div>
+
+                    <div>
+                      <p>Ready to talk?</p>
+
+                      <a
+                        href="https://calendly.com/YOUR-CALENDLY-LINK"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Schedule a conversation{" "}
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

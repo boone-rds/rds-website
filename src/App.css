@@ -1659,6 +1659,35 @@ main {
   color: #4265ad;
 }
 
+.contact-modal-submit:disabled {
+  opacity: 0.55;
+  cursor: wait;
+  transform: none;
+}
+
+.contact-success {
+  padding: 30px 0 12px;
+}
+
+.contact-success h2 {
+  margin-bottom: 24px;
+}
+
+.contact-success > p:not(.contact-modal-eyebrow) {
+  max-width: 520px;
+  margin: 0 0 36px;
+  color: #555b62;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.contact-form-error {
+  margin: -4px 0 0;
+  color: #9b332c;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 @keyframes contact-backdrop-in {
   from {
     opacity: 0;
