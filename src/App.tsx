@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import { useEffect, useState } from "react";
 
 function App() {
+  const [showContactModal, setShowContactModal] = useState(false);
+
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
@@ -28,6 +30,26 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  useEffect(() => {
+    if (!showContactModal) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowContactModal(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showContactModal]);
+
   return (
     <>
       <Header />
@@ -39,7 +61,8 @@ function App() {
             <h1>We solve problems.</h1>
 
             <p className="hero-lead">
-              Through people, systems, technology, and stewardship.
+              By brining together the right people, information, systems, and
+              technology.
             </p>
 
             <p className="hero-purpose">For the glory of God.</p>
@@ -91,8 +114,8 @@ function App() {
 
               <p className="statement-copy">
                 We don&apos;t begin with a product to sell. We begin by
-                understanding the problem, the people affected by it, and what a
-                useful outcome actually looks like.
+                understanding the problem, the people affected by it, and the
+                outcome that actually matters.
               </p>
             </div>
           </div>
@@ -110,8 +133,8 @@ function App() {
 
             <p className="section-intro">
               Raney Day Solutions builds and supports organizations around
-              specific problems, industries, and opportunities. Each brings its
-              own expertise while sharing relationships, systems, and a
+              specific problems, industries, and opportunities. Each brings
+              focused expertise while sharing relationships, systems, and a
               commitment to excellent work.
             </p>
           </div>
@@ -132,7 +155,7 @@ function App() {
                 <h3>Raney Day Solutions</h3>
                 <p>
                   The systems, technology, operations, and problem-solving
-                  engine at the center of the network.
+                  engine that connects the network.
                 </p>
               </div>
 
@@ -182,9 +205,9 @@ function App() {
               <div>
                 <h3>Raney Day Properties</h3>
                 <p>
-                  Real estate solutions built around creative problem-solving,
-                  responsible stewardship, and opportunities that work for
-                  everyone involved.
+                  Real estate solutions built around creative financing,
+                  responsible stewardship, and helping people move confidently
+                  into their next chapter.
                 </p>
               </div>
 
@@ -239,8 +262,8 @@ function App() {
             </h2>
 
             <p className="section-intro">
-              Good solutions rarely begin with the answer. They begin with
-              getting close enough to the problem to understand what is actually
+              Good solutions rarely begin with the answer. They begin by getting
+              close enough to the problem to understand what is actually
               happening.
             </p>
           </div>
@@ -273,8 +296,8 @@ function App() {
               <div className="process-node" aria-hidden="true" />
               <h3>Build</h3>
               <p>
-                Create the simplest useful solution that addresses the real
-                problem instead of adding noise.
+                Create the simplest useful solution that solves the real problem
+                without adding unnecessary complexity.
               </p>
             </article>
 
@@ -303,10 +326,9 @@ function App() {
             </h2>
 
             <p className="section-intro">
-              The form of the solution changes with the problem. Sometimes that
-              means building something new. Sometimes it means making an
-              existing system work better. Sometimes it means helping people see
-              the path forward.
+              The form of the solution changes with the problem. Sometimes we
+              build something new. Sometimes we make an existing system work
+              better. Sometimes we help people see the path forward.
             </p>
           </div>
 
@@ -408,7 +430,7 @@ function App() {
                   <h3>Responsible stewardship</h3>
                   <p>
                     Time, money, people, opportunities, and influence are things
-                    to be handled carefully, not merely consumed.
+                    to be handled carefully, not merely used.
                   </p>
                 </article>
               </div>
@@ -429,17 +451,18 @@ function App() {
 
             <div className="contact-bottom">
               <p>
-                We like complicated problems, especially the ones that
-                don&apos;t fit neatly inside someone else&apos;s service
-                offering.
+                We&apos;re at our best with complicated problems, especially the
+                ones that don&apos;t fit neatly inside someone else&apos;s
+                service offering.
               </p>
 
-              <a
+              <button
                 className="button contact-button"
-                href="mailto:boone@raneydaysolutions.com"
+                type="button"
+                onClick={() => setShowContactModal(true)}
               >
                 Start a Conversation <span aria-hidden="true">→</span>
-              </a>
+              </button>
             </div>
           </div>
         </section>
@@ -501,6 +524,110 @@ function App() {
             <span>Built to solve real problems.</span>
           </div>
         </footer>
+
+        {showContactModal && (
+          <div
+            className="contact-modal-backdrop"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                setShowContactModal(false);
+              }
+            }}
+          >
+            <div
+              className="contact-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="contact-modal-title"
+            >
+              <button
+                className="contact-modal-close"
+                type="button"
+                onClick={() => setShowContactModal(false)}
+                aria-label="Close contact form"
+              >
+                ×
+              </button>
+
+              <p className="contact-modal-eyebrow">START A CONVERSATION</p>
+
+              <h2 id="contact-modal-title">
+                What problem are you trying to solve?
+              </h2>
+
+              <p className="contact-modal-intro">
+                Tell us a little about what you&apos;re working through.
+                We&apos;ll take it from there.
+              </p>
+
+              <form
+                className="contact-modal-form"
+                onSubmit={(event) => event.preventDefault()}
+              >
+                <div className="contact-modal-row">
+                  <label>
+                    <span>Name</span>
+                    <input
+                      type="text"
+                      name="name"
+                      autoComplete="name"
+                      required
+                    />
+                  </label>
+
+                  <label>
+                    <span>Email</span>
+                    <input
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label>
+                  <span>Company / Organization</span>
+                  <input
+                    type="text"
+                    name="company"
+                    autoComplete="organization"
+                  />
+                </label>
+
+                <label>
+                  <span>Tell us about the problem</span>
+                  <textarea name="problem" rows={5} required />
+                </label>
+
+                <button className="button contact-modal-submit" type="submit">
+                  Send Message <span aria-hidden="true">→</span>
+                </button>
+              </form>
+
+              <div className="contact-modal-options">
+                <div>
+                  <p>Prefer email?</p>
+                  <a href="mailto:boone@raneydaysolutions.com">
+                    Email us <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+
+                <div>
+                  <p>Ready to talk?</p>
+                  <a
+                    href="https://calendly.com/YOUR-CALENDLY-LINK"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Schedule a conversation <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <button
           className={`back-to-top ${showBackToTop ? "is-visible" : ""}`}
