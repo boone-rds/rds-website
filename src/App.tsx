@@ -60,12 +60,14 @@ function App() {
             </h2>
 
             <div className="statement-detail">
-              <p className="statement-counterpoint">Not the other way around.</p>
+              <p className="statement-counterpoint">
+                Not the other way around.
+              </p>
 
               <p className="statement-copy">
-                We don't begin with a product to sell. We begin by understanding the
-                problem, the people affected by it, and what a useful outcome actually
-                looks like.
+                We don't begin with a product to sell. We begin by understanding
+                the problem, the people affected by it, and what a useful
+                outcome actually looks like.
               </p>
             </div>
           </div>
@@ -74,7 +76,9 @@ function App() {
         <section className="network" id="network">
           <div className="section-heading">
             <p className="eyebrow">THE RDS NETWORK</p>
-            <h2>Different organizations. Shared relationships. Shared purpose.</h2>
+            <h2>
+              Different organizations. Shared relationships. Shared purpose.
+            </h2>
           </div>
 
           <div className="company-grid">
@@ -82,8 +86,8 @@ function App() {
               <span className="relationship">Core</span>
               <h3>Raney Day Solutions</h3>
               <p>
-                The shared systems, technology, and problem-solving engine behind
-                the network.
+                The shared systems, technology, and problem-solving engine
+                behind the network.
               </p>
             </article>
 
@@ -132,7 +136,10 @@ function App() {
             <article>
               <span>03</span>
               <h3>Build</h3>
-              <p>Create the simplest useful solution that solves the real problem.</p>
+              <p>
+                Create the simplest useful solution that solves the real
+                problem.
+              </p>
             </article>
 
             <article>
@@ -161,8 +168,8 @@ function App() {
             <article>
               <h3>Operate</h3>
               <p>
-                Systems, shared services, data, and process that make organizations
-                work better.
+                Systems, shared services, data, and process that make
+                organizations work better.
               </p>
             </article>
 
@@ -181,8 +188,8 @@ function App() {
           <h2>Our work is not the point. Faithfulness is.</h2>
           <p>
             Raney Day Solutions exists to honor God through the way we work, the
-            way we treat people, and the way we steward the opportunities entrusted
-            to us.
+            way we treat people, and the way we steward the opportunities
+            entrusted to us.
           </p>
         </section>
 
