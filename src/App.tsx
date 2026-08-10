@@ -111,7 +111,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header onContactClick={openContactModal} />
 
       <main>
         <section className="hero">
@@ -740,7 +740,7 @@ function App() {
                       <p>Ready to talk?</p>
 
                       <a
-                        href="https://calendly.com/YOUR-CALENDLY-LINK"
+                        href="https://calendly.com/boone_rds/30min"
                         target="_blank"
                         rel="noreferrer"
                       >
