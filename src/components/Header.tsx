@@ -14,7 +14,8 @@ export default function Header({ onContactClick }: HeaderProps) {
       <nav className="site-nav" aria-label="Primary navigation">
         <a href="#network">Network</a>
         <a href="#process">How We Work</a>
-        <a href="#purpose">Purpose</a>
+        <a href="#capabilities">What We Do</a>
+        <a href="#purpose">Why We Do It</a>
 
         <button className="nav-contact" type="button" onClick={onContactClick}>
           Contact

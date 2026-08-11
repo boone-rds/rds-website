@@ -434,7 +434,7 @@ function App() {
           </div>
         </section>
 
-        <section className="capabilities">
+        <section className="capabilities" id="capabilities">
           <div className="section-heading capability-heading">
             <p className="eyebrow">WHAT WE DO</p>
 
@@ -777,7 +777,7 @@ function App() {
                     <div>
                       <p>Prefer email?</p>
 
-                      <a href="mailto:boone@raneydaysolutions.com">
+                      <a href="mailto:consulting@raneydaysolutions.com">
                         Email us <span aria-hidden="true">→</span>
                       </a>
                     </div>
