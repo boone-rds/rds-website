@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import "./App.css";
 import aquaintMark from "./assets/logos/aquaint-mark.png";
@@ -13,6 +13,8 @@ function App() {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [contactStatus, setContactStatus] = useState<ContactStatus>("idle");
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,10 +35,42 @@ function App() {
       return;
     }
 
+    const modal = modalRef.current;
+
+    const focusableElements = modal?.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    const firstFocusableElement = focusableElements?.[0];
+    const lastFocusableElement =
+      focusableElements?.[focusableElements.length - 1];
+
+    firstFocusableElement?.focus();
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setShowContactModal(false);
         setContactStatus("idle");
+        return;
+      }
+
+      if (
+        event.key !== "Tab" ||
+        !firstFocusableElement ||
+        !lastFocusableElement
+      ) {
+        return;
+      }
+
+      if (event.shiftKey && document.activeElement === firstFocusableElement) {
+        event.preventDefault();
+        lastFocusableElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === lastFocusableElement) {
+        event.preventDefault();
+        firstFocusableElement.focus();
       }
     };
 
@@ -46,6 +80,8 @@ function App() {
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
+
+      previousFocusRef.current?.focus();
     };
   }, [showContactModal]);
 
@@ -57,6 +93,11 @@ function App() {
   };
 
   const openContactModal = () => {
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
     setContactStatus("idle");
     setShowContactModal(true);
   };
@@ -132,9 +173,13 @@ function App() {
                 Explore the RDS Network
               </a>
 
-              <a className="button button-secondary" href="#contact">
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={openContactModal}
+              >
                 Start a Conversation
-              </a>
+              </button>
             </div>
           </div>
 
@@ -616,6 +661,7 @@ function App() {
             }}
           >
             <div
+              ref={modalRef}
               className="contact-modal"
               role="dialog"
               aria-modal="true"
