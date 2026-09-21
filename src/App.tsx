@@ -6,6 +6,9 @@ import rdsLogo from "./assets/logos/rds-logo-white.png";
 import rdsMark from "./assets/logos/rds-mark.png";
 import srcsMark from "./assets/logos/srcs-mark.png";
 import Header from "./components/Header";
+import TurnstileWidget from "./components/TurnstileWidget";
+
+const CONTACT_GATEWAY_URL = import.meta.env.VITE_CONTACT_GATEWAY_URL;
 
 type ContactStatus = "idle" | "sending" | "success" | "error";
 
@@ -13,6 +16,8 @@ function App() {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [contactStatus, setContactStatus] = useState<ContactStatus>("idle");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -51,6 +56,7 @@ function App() {
       if (event.key === "Escape") {
         setShowContactModal(false);
         setContactStatus("idle");
+        setTurnstileToken("");
         return;
       }
 
@@ -99,12 +105,14 @@ function App() {
         : null;
 
     setContactStatus("idle");
+    setTurnstileToken("");
     setShowContactModal(true);
   };
 
   const closeContactModal = () => {
     setShowContactModal(false);
     setContactStatus("idle");
+    setTurnstileToken("");
   };
 
   const handleContactSubmit = async (
@@ -112,40 +120,44 @@ function App() {
   ) => {
     event.preventDefault();
 
-    setContactStatus("sending");
-
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const name = String(formData.get("name") ?? "");
-    const email = String(formData.get("email") ?? "");
-    const company = String(formData.get("company") ?? "");
-    const problem = String(formData.get("problem") ?? "");
+    if (!CONTACT_GATEWAY_URL || !turnstileToken) {
+      setContactStatus("error");
+      return;
+    }
 
-    const googleFormData = new URLSearchParams();
-
-    googleFormData.append("entry.17784801", name);
-    googleFormData.append("entry.1611186763", email);
-    googleFormData.append("entry.1703118455", company);
-    googleFormData.append("entry.1473902308", problem);
+    setContactStatus("sending");
 
     try {
-      await fetch(
-        "https://docs.google.com/forms/d/e/1FAIpQLSfnDE-NFqPQPA0LnXVHyut6WRxGzecNaLv3V-RY2DWAQwfLgQ/formResponse",
-        {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: googleFormData.toString(),
+      const response = await fetch(CONTACT_GATEWAY_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          source: "rds",
+          name: String(formData.get("name") ?? "").trim(),
+          email: String(formData.get("email") ?? "").trim(),
+          company: String(formData.get("company") ?? "").trim(),
+          message: String(formData.get("problem") ?? "").trim(),
+          website: String(formData.get("website") ?? "").trim(),
+          turnstileToken,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Contact gateway returned ${response.status}`);
+      }
 
       form.reset();
+      setTurnstileToken("");
       setContactStatus("success");
     } catch (error) {
-      console.error("Contact form submission failed:", error);
+      console.error("Contact submission failed:", error);
+      setTurnstileToken("");
+      setTurnstileResetKey((value) => value + 1);
       setContactStatus("error");
     }
   };
@@ -751,6 +763,23 @@ function App() {
                       <textarea name="problem" rows={5} required />
                     </label>
 
+                    <label className="contact-honeypot" aria-hidden="true">
+                      <span>Website</span>
+
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        defaultValue=""
+                      />
+                    </label>
+
+                    <TurnstileWidget
+                      key={turnstileResetKey}
+                      onToken={setTurnstileToken}
+                    />
+
                     {contactStatus === "error" && (
                       <p className="contact-form-error">
                         Something went wrong while sending your message. Please
@@ -761,7 +790,8 @@ function App() {
                     <button
                       className="button contact-modal-submit"
                       type="submit"
-                      disabled={contactStatus === "sending"}
+                      disabled={contactStatus === "sending" || !turnstileToken}
+                      aria-busy={contactStatus === "sending"}
                     >
                       {contactStatus === "sending" ? (
                         "Sending..."
